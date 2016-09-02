@@ -1,10 +1,13 @@
 package com.example.drizzle16.moviecard;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +41,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<NowPlayingItem> call, Response<NowPlayingItem> response) {
                 if (response.isSuccessful()) {
-                    if(response.isSuccessful()) {
+                    if (response.isSuccessful()) {
                         nowPlayingItemObj = response.body();
-                        Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
+                      //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
+
+                        rv = (RecyclerView) findViewById(R.id.recycler);
+                        rv.setHasFixedSize(true);
+
+                        mLinearLayoutManager = new LinearLayoutManager(context);
+                        rv.setLayoutManager(mLinearLayoutManager);
+
+                        List<Results> resultsObj = nowPlayingItemObj.getResults();
+                        mAdapter = new MyAdapter(context, resultsObj);
+                        rv.setAdapter(mAdapter);
 
                     }
                 } else {
@@ -54,19 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         });
-        try {
-        rv = (RecyclerView)findViewById(R.id.recycler);
-        rv.setHasFixedSize(true);
 
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        rv.setLayoutManager(mLinearLayoutManager);
 
-        mAdapter = new MyAdapter(this, nowPlayingItemObj);
-           rv.setAdapter(mAdapter);
-        }
-        catch (Exception e){
-            Log.i("lsb", String.valueOf(e));
-        }
+//        }
+//        catch (Exception e){
+//            Log.i("lsb", String.valueOf(e));
+//        }
 
     }
 }
