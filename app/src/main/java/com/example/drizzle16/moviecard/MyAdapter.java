@@ -19,7 +19,6 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<Results> mResultSet;
-    String imgFrontPath = "http://image.tmdb.org/t/p/w500";
     private Context context;
 
     public MyAdapter(Context context, List<Results> resultsObj) {
@@ -37,39 +36,35 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        String imgFrontPath = context.getResources().getString(R.string.img_front);
         holder.tv.setText(mResultSet.get(position).title);
+
         // holder.imgv.setImageResource(mItemSet.getResults().get(position).getPoster_path());
         Context context = holder.imgv.getContext();
-        if(mResultSet.get(position).getPoster_path()!=null) {
+        if (mResultSet.get(position).getPoster_path() != null) {
             Picasso.with(context)
                     .load(imgFrontPath + mResultSet.get(position).getPoster_path())
-                    .placeholder(R.drawable.waiting)
-                    .error(R.drawable.erroricon)
                     .fit()
                     .centerCrop()
+                    .placeholder(R.drawable.waiting)
+                    .error(R.drawable.erroricon)
                     .into(holder.imgv);
-        }else{
+        } else {
             holder.nullTv.setVisibility(View.VISIBLE);
             holder.imgv.setVisibility(View.GONE);
         }
-
     }
 
     @Override
     public int getItemCount() {
 
-            if (mResultSet != null) {
-                return mResultSet.size();
-            } else {
-                Log.i("lsb", "mItemSet.getResults is null");
-                return 1;
-            }
-
+        if (mResultSet != null) {
+            return mResultSet.size();
+        } else {
+            Log.i("lsb", "mItemSet.getResults is null");
+            return 1;
         }
-
-
-
-
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

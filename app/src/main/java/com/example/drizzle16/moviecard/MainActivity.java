@@ -29,13 +29,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+     //   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    //     setSupportActionBar(toolbar);
+
+        String baseURL = getString(R.string.base_url);
+        String apiKey = getString(R.string.key);
+
+        context = getApplicationContext();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/movie/")
+                .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         GitHubService service = retrofit.create(GitHubService.class);
-        Call<NowPlayingItem> cNowItem = service.nowItem("9135f4d26cf27d0c9b9b106e80356a17");
+        Call<NowPlayingItem> cNowItem = service.nowItem(apiKey);
 
         cNowItem.enqueue(new Callback<NowPlayingItem>() {
             @Override
@@ -43,10 +50,12 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.isSuccessful()) {
                         nowPlayingItemObj = response.body();
-                      //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
+                        //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
 
                         rv = (RecyclerView) findViewById(R.id.recycler);
-                        rv.setHasFixedSize(true);
+                        if (rv != null) {
+                            rv.setHasFixedSize(true);
+                        }
 
                         mLinearLayoutManager = new LinearLayoutManager(context);
                         rv.setLayoutManager(mLinearLayoutManager);
@@ -65,64 +74,8 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<NowPlayingItem> call, Throwable t) {
                 Log.d("Error", t.getMessage());
             }
-
-
         });
-
-
-//        }
-//        catch (Exception e){
-//            Log.i("lsb", String.valueOf(e));
-//        }
-
-    }
-}
-
-        /*
-
-
-        //  nowPlayingItemObj = MyRetrofit().execute().bo;
-//        nowPlayingItemObj = MyRetrofit.execute("https://api.themoviedb.org/3/movie/");
-
-    }
-
-    public class MyRetrofit extends AsyncTask<Void, Void, NowPlayingItem> {
-
-        Retrofit retrofit;
-        NowPlayingItem nowPlayingItemObj;
-
-//    @Override
-//    protected void onPreExecute(){
-//
-//    }
-
-
-
-        @Override
-        protected NowPlayingItem doInBackground(Void... params) {
-            try {
-                retrofit = new Retrofit.Builder()
-                        .baseUrl("https://api.themoviedb.org/3/movie/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                GitHubService service = retrofit.create(GitHubService.class);
-                NowPlayingItem cNowItem = service.nowItem("9135f4d26cf27d0c9b9b106e80356a17");
-
-          //      rv = (RecyclerView)
-                // Log.i("lsb", String.valueOf(cNowItem.execute().body().getResults().get(0).getPoster_path()));
-                //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
-
-                return cNowItem;
-
-            } catch (Exception e) {
-                Log.i("lsb", String.valueOf(e));
-                return null;
-            }
-
-        }
-
     }
 
 
 }
-*/

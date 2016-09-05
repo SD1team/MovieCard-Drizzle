@@ -3,6 +3,5 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
 
-    <item name="colorAccent">@color/thinkware</item>
 </style>
 </resources>

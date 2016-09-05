@@ -4,4 +4,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="thinkware">#EB2A31</color>
     <color name="backgray">#EAEAEA</color>
+    <color name="ColorPrimary">@color/thinkware</color>
 </resources>
