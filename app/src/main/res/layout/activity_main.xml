@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/backgray">
-   <!-- <android.support.v4.widget.Toobar
+
+   <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:titleTextColor="#fff"
         android:id="@+id/toolbar"
-        android:background="@color/thinkware"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-    </android.support.v4.widget.Toobar>
--->
+        android:layout_height="48dp"
+       android:padding="8dp"
+
+       android:contentInsetLeft="0dp"
+       android:contentInsetStart="0dp"
+       app:contentInsetLeft="0dp"
+       app:contentInsetStart="0dp"
+       android:contentInsetRight="0dp"
+       android:contentInsetEnd="0dp"
+       app:contentInsetRight="0dp"
+       app:contentInsetEnd="0dp">
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
     android:layout_height="match_parent"
     android:layout_width="match_parent"
