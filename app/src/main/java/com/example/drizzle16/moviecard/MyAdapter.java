@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -34,13 +35,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         String imgFrontPath = context.getResources().getString(R.string.img_front);
         holder.tv.setText(mResultSet.get(position).title);
 
         // holder.imgv.setImageResource(mItemSet.getResults().get(position).getPoster_path());
-        Context context = holder.imgv.getContext();
+        final Context context = holder.imgv.getContext();
+        //     final LinearLayout inLayout = (LinearLayout) inLayout.findViewById(R.id.item);
+
         if (mResultSet.get(position).getPoster_path() != null) {
             Picasso.with(context)
                     .load(imgFrontPath + mResultSet.get(position).getPoster_path())
@@ -49,6 +52,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     .placeholder(R.drawable.waiting)
                     .error(R.drawable.erroricon)
                     .into(holder.imgv);
+            holder.imgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    LinearLayout bottomLayout = new LinearLayout(context);
+                    bottomLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                    holder.imgv = new ImageView(context);
+                    bottomLayout.addView(holder.imgv);
+                    // bottomLayout.addView();
+                    Log.i("lsb", "클릭됐다");
+                }
+            });
         } else {
             holder.nullTv.setVisibility(View.VISIBLE);
             holder.imgv.setVisibility(View.GONE);
@@ -80,6 +97,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             nullTv.setVisibility(view.GONE);
             imgv = (ImageView) view.findViewById(R.id.poster);
         }
+
     }
 
 }
