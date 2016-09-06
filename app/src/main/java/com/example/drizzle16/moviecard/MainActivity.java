@@ -8,9 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.movie);
 
         LayoutInflater inflater = (LayoutInflater)getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout linear = (LinearLayout)inflater.inflate(R.layout.item_info, null);
+       // LinearLayout linear = (LinearLayout)inflater.inflate(R.layout.item_info, null);
 
         String baseURL = getString(R.string.base_url);
         String apiKey = getString(R.string.key);
@@ -53,12 +52,28 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         GitHubService service = retrofit.create(GitHubService.class);
         Call<NowPlayingItem> cNowItem = service.nowItem(apiKey);
-        Call<ArrayList<Genres>> cGenres =  service.genres(apiKey);
+        Call<HashMap<Integer, String>> cGenres =  service.genres(apiKey);
+
+//        cGenres.enqueue(new Callback<HashMap<Integer, String>>() {
+//            @Override
+//            public void onResponse(Call<HashMap<Integer, String>> call, Response<HashMap<Integer, String>> response) {
+//                if (response.isSuccessful()) {
+//                    cGenres = response.body();
+//                }else {
+//                    Log.i("lsb", "<HashMap> onResponse doesn't work");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HashMap<Integer, String>> call, Throwable t) {
+//
+//            }
+//        });
 
         cNowItem.enqueue(new Callback<NowPlayingItem>() {
             @Override
             public void onResponse(Call<NowPlayingItem> call, Response<NowPlayingItem> response) {
-                if (response.isSuccessful()) {
+               // if (response.isSuccessful()) {
                     if (response.isSuccessful()) {
                         nowPlayingItemObj = response.body();
                         //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
@@ -75,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         mAdapter = new MyAdapter(context, resultsObj);
                         rv.setAdapter(mAdapter);
 
-                    }
+                 //   }
                 } else {
                     Log.i("lsb", "onResponse doesn't work");
                 }

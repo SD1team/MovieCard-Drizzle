@@ -1,6 +1,6 @@
 package com.example.drizzle16.moviecard;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,7 +14,7 @@ public interface GitHubService {
     Call<NowPlayingItem> nowItem(@Query("api_key") String key);
 
     @GET("genre/movie/list")
-    Call<ArrayList<Genres>> genres(@Query("api_key") String key);
+    Call<HashMap<Integer, String>> genres(@Query("api_key") String key);
 }
 
 

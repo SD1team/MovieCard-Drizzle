@@ -135,21 +135,9 @@ public class Results{
 
     @Override
     public String toString() {
-        return "ItemResult{" +
-                "poster_path='" + poster_path + '\'' +
-                ", adult=" + adult +
-                ", overview='" + overview + '\'' +
-                ", release_date='" + release_date + '\'' +
-                ", genre_ids=" + genre_ids +
-                ", id=" + id +
-                ", original_title='" + original_title + '\'' +
-                ", original_language='" + original_language + '\'' +
-                ", title='" + title + '\'' +
-                ", backdrop_path='" + backdrop_path + '\'' +
-                ", popularity=" + popularity +
-                ", vote_count=" + vote_count +
-                ", video=" + video +
-                ", vote_average=" + vote_average +
-                '}';
+        return '\n'+"Adult " + adult +'\n'+
+                '\n'+"Release Date " + release_date + '\n' +
+                '\n'+"Overview"+'\n' + overview + '\n' +
+                '\n'+"Popularity " + popularity;
     }
 }

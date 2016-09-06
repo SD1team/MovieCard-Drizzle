@@ -56,9 +56,7 @@ public class NowPlayingItem{
 
     @Override
     public String toString() {
-        return "NowPlayingItem{" +
-                "page=" + page +
-                ", results=" + results +
+        return  ", results=" + results +
                 ", dates=" + dates +
                 ", total_pages=" + total_pages +
                 ", total_results=" + total_results +
