@@ -135,8 +135,8 @@ public class Results{
 
     @Override
     public String toString() {
-        return "<br><b>Release Date </b>" + release_date + "<br>"+
-                "<br><b>Overview</b>"+"<br>"+ overview + "<br>"+
-                "<br><b>Popularity </b>" + popularity;
+        return "<br><font color='#EB2A31'>Release Date </font>" + release_date + "<br>"+
+                "<br><font color='#EB2A31'>Overview</font>"+"<br>"+ overview + "<br>"+
+                "<br><font color='#EB2A31'>Popularity </font>" + popularity;
     }
 }

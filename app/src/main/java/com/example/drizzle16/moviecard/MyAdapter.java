@@ -40,10 +40,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
+        holder.infoTv.setVisibility(View.GONE);
+
         String imgFrontPath = context.getResources().getString(R.string.img_front);
         holder.tv.setText(mResultSet.get(position).title);
+       // private final View.OnClickListener mOnClickListener = new MyOnClickListener();
 
-       final Context context = holder.imgv.getContext();
+
+        final Context context = holder.imgv.getContext();
 
         if (mResultSet.get(position).getPoster_path() != null) {
             Picasso.with(context)
@@ -58,6 +62,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 public void onClick(View v) {
                     if(holder.infoTv.getVisibility()==View.GONE) {
                         String originalTitle = mResultSet.get(position).getTitle()+'\n';
+
                         /*모든 장르 찍기*/
                         String fullGenres = "";
                         String temp = "";
@@ -68,7 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         }
                         String backInfo = mResultSet.get(position).toString();
 
-                        String fullText = "<b>"+ originalTitle + "</b><br><br>"+ "| " +fullGenres +"<br>" + backInfo;
+                        String fullText = "<font color='#EB2A31'><b>"+ originalTitle + "</b></font><br><br>"+ "| " +fullGenres +"<br>" + backInfo;
                         //String genres =;
                         //holder.infoTv.setMovementMethod(new ScrollingMovementMethod());
                         holder.infoTv.setText(Html.fromHtml(fullText));
@@ -113,5 +118,3 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
 }
-
-

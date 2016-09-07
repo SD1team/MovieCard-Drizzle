@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         toolbar.setLogo(R.drawable.movie);
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        //LayoutInflater inflater = (LayoutInflater) getSystemService(context.LAYOUT_INFLATER_SERVICE);
         // LinearLayout linear = (LinearLayout)inflater.inflate(R.layout.item_info, null);
 
         String baseURL = getString(R.string.base_url);
