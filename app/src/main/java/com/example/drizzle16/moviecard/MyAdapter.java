@@ -2,6 +2,7 @@ package com.example.drizzle16.moviecard;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +24,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private HashMap<Integer, String> mGenres;
 
-    public MyAdapter(Context context,/* HashMap<Integer, String> genres,*/ List<Results> resultsObj) {
+    public MyAdapter(Context context, HashMap<Integer, String> genres, List<Results> resultsObj) {
         this.context = context;
-    //    mGenres = genres;
+        mGenres = genres;
         mResultSet = resultsObj;
     }
 
@@ -57,12 +58,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 public void onClick(View v) {
                     if(holder.infoTv.getVisibility()==View.GONE) {
                         String originalTitle = mResultSet.get(position).getTitle()+'\n';
+                        /*모든 장르 찍기*/
+                        String fullGenres = "";
+                        String temp = "";
+                        for(int i=0;i<mResultSet.get(position).getGenre_ids().size();++i){
+                            int id = mResultSet.get(position).getGenre_ids().get(i);
+                            temp = mGenres.get(id);
+                            fullGenres += temp + " | ";
+                        }
                         String backInfo = mResultSet.get(position).toString();
 
-                        String fullText = originalTitle + backInfo;
+                        String fullText = "<b>"+ originalTitle + "</b><br><br>"+ "| " +fullGenres +"<br>" + backInfo;
                         //String genres =;
                         //holder.infoTv.setMovementMethod(new ScrollingMovementMethod());
-                        holder.infoTv.setText(fullText);
+                        holder.infoTv.setText(Html.fromHtml(fullText));
                         holder.infoTv.setVisibility(v.VISIBLE);
                     }else if(holder.infoTv.getVisibility()==View.VISIBLE){
                         holder.infoTv.setVisibility(v.GONE);

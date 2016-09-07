@@ -135,9 +135,8 @@ public class Results{
 
     @Override
     public String toString() {
-        return '\n'+"Adult " + adult +'\n'+
-                '\n'+"Release Date " + release_date + '\n' +
-                '\n'+"Overview"+'\n' + overview + '\n' +
-                '\n'+"Popularity " + popularity;
+        return "<br><b>Release Date </b>" + release_date + "<br>"+
+                "<br><b>Overview</b>"+"<br>"+ overview + "<br>"+
+                "<br><b>Popularity </b>" + popularity;
     }
 }

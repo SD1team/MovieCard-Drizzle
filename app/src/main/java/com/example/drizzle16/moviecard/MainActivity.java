@@ -23,6 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     NowPlayingItem nowPlayingItemObj;
+    GenreObj genresObj;
+    HashMap<Integer, String> genreMap = new HashMap<>();
     private RecyclerView rv;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -38,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         toolbar.setLogo(R.drawable.movie);
 
-        LayoutInflater inflater = (LayoutInflater)getSystemService(context.LAYOUT_INFLATER_SERVICE);
-       // LinearLayout linear = (LinearLayout)inflater.inflate(R.layout.item_info, null);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        // LinearLayout linear = (LinearLayout)inflater.inflate(R.layout.item_info, null);
 
         String baseURL = getString(R.string.base_url);
         String apiKey = getString(R.string.key);
@@ -52,45 +54,47 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         GitHubService service = retrofit.create(GitHubService.class);
         Call<NowPlayingItem> cNowItem = service.nowItem(apiKey);
-        Call<HashMap<Integer, String>> cGenres =  service.genres(apiKey);
+        Call<GenreObj> cGenres = service.genres(apiKey);
 
-//        cGenres.enqueue(new Callback<HashMap<Integer, String>>() {
-//            @Override
-//            public void onResponse(Call<HashMap<Integer, String>> call, Response<HashMap<Integer, String>> response) {
-//                if (response.isSuccessful()) {
-//                    cGenres = response.body();
-//                }else {
-//                    Log.i("lsb", "<HashMap> onResponse doesn't work");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HashMap<Integer, String>> call, Throwable t) {
-//
-//            }
-//        });
+        cGenres.enqueue(new Callback<GenreObj>() {
+            @Override
+            public void onResponse(Call<GenreObj> call, Response<GenreObj> response) {
+                  if(response.isSuccessful()) {
+                      genresObj = response.body();
+                      if (genresObj != null) {
+                          for (int i = 0; i < genresObj.genres.size(); ++i) {
+                              genreMap.put(genresObj.genres.get(i).getId(), genresObj.genres.get(i).getName());
+                          }
+                      } else {
+                          Log.i("lsb", "genresObj is null");
+                      }
+                  }
+                }
+            @Override
+            public void onFailure(Call<GenreObj> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+            }
+        });
 
         cNowItem.enqueue(new Callback<NowPlayingItem>() {
             @Override
             public void onResponse(Call<NowPlayingItem> call, Response<NowPlayingItem> response) {
-               // if (response.isSuccessful()) {
-                    if (response.isSuccessful()) {
-                        nowPlayingItemObj = response.body();
-                        //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
+                if (response.isSuccessful()) {
+                    nowPlayingItemObj = response.body();
+                    //  Log.i("lsb", String.valueOf(nowPlayingItemObj.getResults().get(0).getPoster_path()));
 
-                        rv = (RecyclerView) findViewById(R.id.recycler);
-                        if (rv != null) {
-                            rv.setHasFixedSize(true);
-                        }
+                    rv = (RecyclerView) findViewById(R.id.recycler);
+                    if (rv != null) {
+                        rv.setHasFixedSize(true);
+                    }
 
-                        mLinearLayoutManager = new LinearLayoutManager(context);
-                        rv.setLayoutManager(mLinearLayoutManager);
+                    mLinearLayoutManager = new LinearLayoutManager(context);
+                    rv.setLayoutManager(mLinearLayoutManager);
 
-                        List<Results> resultsObj = nowPlayingItemObj.getResults();
-                        mAdapter = new MyAdapter(context, resultsObj);
-                        rv.setAdapter(mAdapter);
+                    List<Results> resultsObj = nowPlayingItemObj.getResults();
+                    mAdapter = new MyAdapter(context, genreMap, resultsObj);
+                    rv.setAdapter(mAdapter);
 
-                 //   }
                 } else {
                     Log.i("lsb", "onResponse doesn't work");
                 }
@@ -101,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Error", t.getMessage());
             }
         });
+
+
     }
 
 
