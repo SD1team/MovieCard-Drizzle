@@ -21,6 +21,18 @@ public class Results{
     boolean video;
     float vote_average;
 
+    /*임의 변수 : 클릭됐었는지 체크*/
+    boolean clicked = false;
+
+    public boolean isClicked() {
+        return clicked;
+    }
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
+
+
     public String getPoster_path() {
         return poster_path;
     }

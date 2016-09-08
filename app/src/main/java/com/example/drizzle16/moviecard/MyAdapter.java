@@ -40,16 +40,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.infoTv.setVisibility(View.GONE);
+        holder.tv.setText(mResultSet.get(position).title);
 
         String imgFrontPath = context.getResources().getString(R.string.img_front);
-        holder.tv.setText(mResultSet.get(position).title);
-       // private final View.OnClickListener mOnClickListener = new MyOnClickListener();
-
-
         final Context context = holder.imgv.getContext();
 
+        /*이전에 클릭됐었는지 체크*/
+        if(mResultSet.get(position).isClicked()){
+            String fullText = OrganizedInfo(position);
+            holder.infoTv.setText(Html.fromHtml(fullText));
+            holder.infoTv.setVisibility(View.VISIBLE);
+        }else {
+            holder.infoTv.setVisibility(View.GONE);
+        }
+
+        /*제공된 포스터가 있다면 이미지로드*/
         if (mResultSet.get(position).getPoster_path() != null) {
+            Picasso.with(context).setIndicatorsEnabled(true);
             Picasso.with(context)
                     .load(imgFrontPath + mResultSet.get(position).getPoster_path())
                     .fit()
@@ -57,33 +64,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     .placeholder(R.drawable.waiting)
                     .error(R.drawable.erroricon)
                     .into(holder.imgv);
+
+            /*이미지뷰 현재 클릭된 여부에 따라 클릭이벤트*/
             holder.imgv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(holder.infoTv.getVisibility()==View.GONE) {
-                        String originalTitle = mResultSet.get(position).getTitle()+'\n';
 
-                        /*모든 장르 찍기*/
-                        String fullGenres = "";
-                        String temp = "";
-                        for(int i=0;i<mResultSet.get(position).getGenre_ids().size();++i){
-                            int id = mResultSet.get(position).getGenre_ids().get(i);
-                            temp = mGenres.get(id);
-                            fullGenres += temp + " | ";
-                        }
-                        String backInfo = mResultSet.get(position).toString();
-
-                        String fullText = "<font color='#EB2A31'><b>"+ originalTitle + "</b></font><br><br>"+ "| " +fullGenres +"<br>" + backInfo;
-                        //String genres =;
-                        //holder.infoTv.setMovementMethod(new ScrollingMovementMethod());
+                        String fullText = OrganizedInfo(position);
                         holder.infoTv.setText(Html.fromHtml(fullText));
+
                         holder.infoTv.setVisibility(v.VISIBLE);
+                        mResultSet.get(position).setClicked(true);
+
                     }else if(holder.infoTv.getVisibility()==View.VISIBLE){
+
                         holder.infoTv.setVisibility(v.GONE);
+                        mResultSet.get(position).setClicked(false);
                     }
                 }
             });
         } else {
+            /*제공된 포스터가 없습니다*/
             holder.nullTv.setVisibility(View.VISIBLE);
             holder.imgv.setVisibility(View.GONE);
         }
@@ -96,7 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             return mResultSet.size();
         } else {
             Log.i("lsb", "mItemSet.getResults is null");
-            return 1;
+            return 0;
         }
     }
 
@@ -117,4 +119,38 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     }
 
+    /*뷰에 띄울 info 정리*/
+    public String OrganizedInfo(int position) {
+
+        String originalTitle = "";
+
+        if(mResultSet.get(position).getTitle()!=null) {
+            originalTitle = mResultSet.get(position).getTitle() + '\n';
+        }else{
+            originalTitle = "[!] NO TITLE DATA";
+        }
+
+        /*모든 장르id에 따른 value 찍기*/
+        String fullGenres = "";
+        String temp = "";
+
+        if(mResultSet.get(position).getGenre_ids()!=null) {
+            for (int i = 0; i < mResultSet.get(position).getGenre_ids().size(); ++i) {
+                int id = mResultSet.get(position).getGenre_ids().get(i);
+                temp = mGenres.get(id);
+                fullGenres += temp + " | ";
+            }
+        }else{
+            fullGenres = "[!] NO GENRE DATA";
+        }
+
+        String backInfo = mResultSet.get(position).toString();
+
+        String fullText = "<font color='#EB2A31'><b>"+ originalTitle + "</b></font><br><br>"+ "| " +fullGenres +"<br>" + backInfo;
+
+        return fullText;
+    }
+
+
 }
+
