@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -41,6 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.tv.setText(mResultSet.get(position).title);
+      //  holder.scrollV.setVisibility(View.GONE);
 
         String imgFrontPath = context.getResources().getString(R.string.img_front);
         final Context context = holder.imgv.getContext();
@@ -49,8 +52,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         if(mResultSet.get(position).isClicked()){
             String fullText = OrganizedInfo(position);
             holder.infoTv.setText(Html.fromHtml(fullText));
+            holder.scrollV.setVisibility(View.VISIBLE);
             holder.infoTv.setVisibility(View.VISIBLE);
         }else {
+            holder.scrollV.setVisibility(View.GONE);
             holder.infoTv.setVisibility(View.GONE);
         }
 
@@ -66,24 +71,57 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     .into(holder.imgv);
 
             /*이미지뷰 현재 클릭된 여부에 따라 클릭이벤트*/
+            if(holder.infoTv.getVisibility()==View.GONE) {
             holder.imgv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(holder.infoTv.getVisibility()==View.GONE) {
+
 
                         String fullText = OrganizedInfo(position);
-                        holder.infoTv.setText(Html.fromHtml(fullText));
 
+
+                        holder.infoTv.setText(Html.fromHtml(fullText));
+                    holder.scrollV.setVisibility(v.VISIBLE);
                         holder.infoTv.setVisibility(v.VISIBLE);
+
+                    holder.infoTv.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_UP: {
+
+                                    Log.i("lsb", "TOUCH");
+                                    holder.infoTv.setVisibility(v.GONE);
+                                    holder.scrollV.setVisibility(v.GONE);
+                                    mResultSet.get(position).setClicked(false);
+
+                                    break;
+                                }
+                                case MotionEvent.ACTION_MOVE: {
+                                    // holder.infoTv.scroll
+//                                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                                    if(holder.infoTv.getLineCount()>24){
+                                    holder.scrollV.getParent().requestDisallowInterceptTouchEvent(true);
+//                                        if(holder.scrollV.FOCUS_DOWN||holder.scrollV.FOCUS_UP) {
+//
+//                                        }
+                                    }
+
+                                    break;
+                                }
+                            }
+                            return false;
+
+                        }
+                    });
+
+                        holder.infoTv.setFocusable(true);
                         mResultSet.get(position).setClicked(true);
 
-                    }else if(holder.infoTv.getVisibility()==View.VISIBLE){
-
-                        holder.infoTv.setVisibility(v.GONE);
-                        mResultSet.get(position).setClicked(false);
-                    }
                 }
             });
+            }
+
         } else {
             /*제공된 포스터가 없습니다*/
             holder.nullTv.setVisibility(View.VISIBLE);
@@ -108,6 +146,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public TextView nullTv;
         public ImageView imgv;
         public TextView infoTv;
+        public ScrollView scrollV;
 
         public ViewHolder(View view) {
             super(view);
@@ -115,6 +154,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             nullTv = (TextView) view.findViewById(R.id.nullposter);
             imgv = (ImageView) view.findViewById(R.id.poster);
             infoTv = (TextView) view.findViewById(R.id.infoBox);
+            scrollV = (ScrollView) view.findViewById(R.id.scrollview);
         }
 
     }
@@ -153,4 +193,3 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
 }
-

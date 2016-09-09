@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         cNowItem.enqueue(new Callback<NowPlayingItem>() {
             @Override
             public void onResponse(Call<NowPlayingItem> call, Response<NowPlayingItem> response) {

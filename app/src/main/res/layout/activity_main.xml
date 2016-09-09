@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/backgray">
+    android:background="@color/backgray"
+    android:orientation="vertical">
 
-   <android.support.v7.widget.Toolbar
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:titleTextColor="#fff"
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-       android:padding="8dp"
+        android:background="@color/white"
+        android:contentInsetEnd="0dp"
+        android:contentInsetLeft="0dp"
 
-       android:contentInsetLeft="0dp"
-       android:contentInsetStart="0dp"
-       app:contentInsetLeft="0dp"
-       app:contentInsetStart="0dp"
-       android:contentInsetRight="0dp"
-       android:contentInsetEnd="0dp"
-       app:contentInsetRight="0dp"
-       app:contentInsetEnd="0dp">
-    </android.support.v7.widget.Toolbar>
+        android:contentInsetRight="0dp"
+        android:contentInsetStart="0dp"
+        android:padding="8dp"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:titleTextColor="#fff"></android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:scrollbars="vertical"
-    android:id="@+id/recycler">
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
 
-</android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
