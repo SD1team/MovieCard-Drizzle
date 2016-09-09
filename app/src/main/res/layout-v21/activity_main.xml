@@ -11,23 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
-        android:padding="16dp"
         android:contentInsetEnd="0dp"
-        android:contentInsetLeft="16dp"
-        android:contentInsetRight="16dp"
+        android:contentInsetLeft="0dp"
+
+        android:contentInsetRight="0dp"
         android:contentInsetStart="0dp"
         app:contentInsetEnd="0dp"
-        app:contentInsetLeft="16dp"
-        app:contentInsetRight="16dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
         app:contentInsetStart="0dp"
         app:titleTextColor="#fff">
 
         <Button
-            android:clickable="true"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="right"
-            android:layout_margin="16dp"
             android:background="@mipmap/love64gray"/>
     </android.support.v7.widget.Toolbar>
 

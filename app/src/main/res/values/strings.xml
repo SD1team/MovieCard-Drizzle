@@ -4,4 +4,6 @@
     <string name="key">9135f4d26cf27d0c9b9b106e80356a17</string>
     <string name="img_front">http://image.tmdb.org/t/p/w500</string>
     <string name="adult_img"> <img src='adult.png' width='24'/></string>
+
+    <string name="my_love">MyLove</string>
 </resources>

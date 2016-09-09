@@ -39,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         toolbar.setLogo(R.drawable.movie);
 
+        rv = (RecyclerView) findViewById(R.id.recycler);
+        if (rv != null) {
+            rv.setHasFixedSize(true);
+        }
+        mLinearLayoutManager = new LinearLayoutManager(context);
+        rv.setLayoutManager(mLinearLayoutManager);
+
+
         String baseURL = getString(R.string.base_url);
         String apiKey = getString(R.string.key);
 
@@ -82,13 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     nowPlayingItemObj = response.body();
 
-                    rv = (RecyclerView) findViewById(R.id.recycler);
-                    if (rv != null) {
-                        rv.setHasFixedSize(true);
-                    }
-                    mLinearLayoutManager = new LinearLayoutManager(context);
-                    rv.setLayoutManager(mLinearLayoutManager);
-
                     if (nowPlayingItemObj != null) {
                         List<Results> resultsObj = nowPlayingItemObj.getResults();
                         mAdapter = new MyAdapter(context, genreMap, resultsObj);
@@ -106,5 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Error", t.getMessage());
             }
         });
+
+
+
     }
 }
