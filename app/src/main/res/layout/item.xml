@@ -45,22 +45,25 @@
                     android:id="@+id/titleLove"/>
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/nullposter"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:text="The Poster of this movie is NOT provided"
-                android:textColor="@color/softBlack"
-                android:textSize="@dimen/text_size"
 
-                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+               >
+
+                <TextView
+                    android:id="@+id/nullposter"
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical|center"
+                    android:text="The Poster of this movie is NOT provided"
+                    android:textColor="@color/softBlack"
+                    android:textSize="@dimen/text_size"
+
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/poster"

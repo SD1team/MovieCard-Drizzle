@@ -1,4 +1,4 @@
-package com.example.drizzle16.moviecard;
+package com.example.drizzle16.moviecard.dataSet;
 
 import java.util.ArrayList;
 

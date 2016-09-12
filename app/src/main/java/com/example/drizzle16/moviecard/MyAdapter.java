@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.drizzle16.moviecard.dataSet.Results;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.i("lsb", "onCreateViewHolder");
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
@@ -42,7 +44,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.tv.setText(mResultSet.get(position).title);
+        /*뷰 visibility 초기화*/
+        holder.nullTv.setVisibility(View.GONE);
+        holder.imgv.setVisibility(View.VISIBLE);
+
+        Log.i("lsb", "onBindViewHolder" + position);
+
+        holder.tv.setText(mResultSet.get(position).getTitle());
 //        holder.loveV.getParent().requestDisallowInterceptTouchEvent(true);
 //        holder.loveV.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -56,6 +64,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         /*이전에 클릭됐었는지 체크*/
         if (mResultSet.get(position).isClicked()) {
+
             String fullText = OrganizedInfo(position);
             holder.infoTv.setText(Html.fromHtml(fullText));
             holder.scrollV.setVisibility(View.VISIBLE);
@@ -66,7 +75,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         /*제공된 포스터가 있다면 이미지로드*/
+
         if (mResultSet.get(position).getPoster_path() != null) {
+            Log.i("lsb", "getPoster_path is not null in position : " + position);
+
             Picasso.with(context).setIndicatorsEnabled(true);
             Picasso.with(context)
                     .load(imgFrontPath + mResultSet.get(position).getPoster_path())
@@ -82,9 +94,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     @Override
                     public void onClick(View v) {
 
-
                         String fullText = OrganizedInfo(position);
-
 
                         holder.infoTv.setText(Html.fromHtml(fullText));
                         holder.scrollV.setVisibility(v.VISIBLE);
@@ -96,7 +106,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                 switch (event.getAction()) {
                                     case MotionEvent.ACTION_UP: {
 
-                                        Log.i("lsb", "TOUCH");
                                         holder.infoTv.setVisibility(v.GONE);
                                         holder.scrollV.setVisibility(v.GONE);
                                         mResultSet.get(position).setClicked(false);
@@ -104,13 +113,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                         break;
                                     }
                                     case MotionEvent.ACTION_MOVE: {
-                                        // holder.infoTv.scroll
-//                                    v.getParent().requestDisallowInterceptTouchEvent(true);
                                         if (holder.infoTv.getLineCount() > 24) {
                                             holder.scrollV.getParent().requestDisallowInterceptTouchEvent(true);
-//                                        if(holder.scrollV.FOCUS_DOWN||holder.scrollV.FOCUS_UP) {
-//
-//                                        }
                                         }
 
                                         break;
@@ -128,10 +132,59 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 });
             }
 
+
         } else {
             /*제공된 포스터가 없습니다*/
             holder.nullTv.setVisibility(View.VISIBLE);
+            if (holder.infoTv.getVisibility() == View.GONE) {
+                holder.nullTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Log.i("lsb", "nullTv onclick");
+
+
+                        String fullText = OrganizedInfo(position);
+
+                        holder.infoTv.setText(Html.fromHtml(fullText));
+                        holder.scrollV.setVisibility(v.VISIBLE);
+                        holder.infoTv.setVisibility(v.VISIBLE);
+
+                        holder.infoTv.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                switch (event.getAction()) {
+                                    case MotionEvent.ACTION_UP: {
+
+                                        holder.infoTv.setVisibility(v.GONE);
+                                        holder.scrollV.setVisibility(v.GONE);
+                                        mResultSet.get(position).setClicked(false);
+
+                                        break;
+                                    }
+                                    case MotionEvent.ACTION_MOVE: {
+                                        if (holder.infoTv.getLineCount() > 24) {
+                                            holder.scrollV.getParent().requestDisallowInterceptTouchEvent(true);
+                                        }
+
+                                        break;
+                                    }
+                                }
+                                return false;
+
+                            }
+                        });
+
+                        holder.infoTv.setFocusable(true);
+                        mResultSet.get(position).setClicked(true);
+
+                    }
+                });
+            }
+
+
             holder.imgv.setVisibility(View.GONE);
+
         }
     }
 
@@ -139,6 +192,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public int getItemCount() {
 
         if (mResultSet != null) {
+            Log.i("lsb", "getItemCount : " + mResultSet.size());
             return mResultSet.size();
         } else {
             Log.i("lsb", "mItemSet.getResults is null");
@@ -157,6 +211,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         public ViewHolder(View view) {
             super(view);
+            Log.i("lsb", "viewholder");
             tv = (TextView) view.findViewById(R.id.title);
             nullTv = (TextView) view.findViewById(R.id.nullposter);
             imgv = (ImageView) view.findViewById(R.id.poster);
@@ -173,23 +228,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         String originalTitle = "";
 
         if (mResultSet.get(position).getTitle() != null) {
-            originalTitle = mResultSet.get(position).getTitle() + '\n';
+            if (mResultSet.get(position).isAdult()) {
+                String adultImg = context.getResources().getString(R.string.adult_img);
+                originalTitle = mResultSet.get(position).getTitle() + " " + adultImg + '\n';
+            } else {
+                originalTitle = mResultSet.get(position).getTitle() + '\n';
+            }
         } else {
-            originalTitle = "[!] NO TITLE DATA";
+            originalTitle = "# NO TITLE DATA #";
         }
 
         /*모든 장르id에 따른 value 찍기*/
         String fullGenres = "";
         String temp = "";
 
-        if (mResultSet.get(position).getGenre_ids() != null) {
+        if (mResultSet.get(position).getGenre_ids().size()!=0) {
             for (int i = 0; i < mResultSet.get(position).getGenre_ids().size(); ++i) {
                 int id = mResultSet.get(position).getGenre_ids().get(i);
                 temp = mGenres.get(id);
                 fullGenres += temp + " | ";
             }
         } else {
-            fullGenres = "[!] NO GENRE DATA";
+            fullGenres = "# NO GENRE DATA # |";
         }
 
         String backInfo = mResultSet.get(position).toString();

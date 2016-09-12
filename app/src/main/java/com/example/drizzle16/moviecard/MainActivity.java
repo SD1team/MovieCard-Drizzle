@@ -8,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.example.drizzle16.moviecard.dataSet.GenreObj;
+import com.example.drizzle16.moviecard.dataSet.NowPlayingItem;
+import com.example.drizzle16.moviecard.dataSet.Results;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
         if (rv != null) {
             rv.setHasFixedSize(true);
         }
-        mLinearLayoutManager = new LinearLayoutManager(context);
-        rv.setLayoutManager(mLinearLayoutManager);
 
 
         String baseURL = getString(R.string.base_url);
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        GitHubService service = retrofit.create(GitHubService.class);
+        CallGet service = retrofit.create(CallGet.class);
 
         Call<GenreObj> cGenres = service.genres(apiKey);
         Call<NowPlayingItem> cNowItem = service.nowItem(apiKey);
@@ -68,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
                     genresObj = response.body();
                       /*장르 id, name을 key, value로 저장*/
                     if (genresObj != null) {
-                        for (int i = 0; i < genresObj.genres.size(); ++i) {
-                            genreMap.put(genresObj.genres.get(i).getId(), genresObj.genres.get(i).getName());
+                        for (int i = 0; i < genresObj.getGenres().size(); ++i) {
+                            genreMap.put(genresObj.getGenres().get(i).getId(), genresObj.getGenres().get(i).getName());
                         }
                     } else {
                         Log.i("lsb", "genresObj is null");
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         cNowItem.enqueue(new Callback<NowPlayingItem>() {
             @Override
             public void onResponse(Call<NowPlayingItem> call, Response<NowPlayingItem> response) {
@@ -92,8 +93,16 @@ public class MainActivity extends AppCompatActivity {
 
                     if (nowPlayingItemObj != null) {
                         List<Results> resultsObj = nowPlayingItemObj.getResults();
-                        mAdapter = new MyAdapter(context, genreMap, resultsObj);
-                        rv.setAdapter(mAdapter);
+                        if (resultsObj != null) {
+                            //if(resultsObj.get(position).getPoster_path())
+                            mAdapter = new MyAdapter(context, genreMap, resultsObj);
+                            mLinearLayoutManager = new LinearLayoutManager(context);
+                            rv.setLayoutManager(mLinearLayoutManager);
+                            rv.setAdapter(mAdapter);
+                        } else {
+                            Log.i("lsb", "resultsObj is null");
+
+                        }
                     } else {
                         Log.i("lsb", "nowPlayingItemObj is null");
                     }
@@ -107,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Error", t.getMessage());
             }
         });
-
 
 
     }
