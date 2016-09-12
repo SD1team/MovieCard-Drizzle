@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 /**
  * Created by drizzle16 on 2016-09-01.
  */
-public interface CallGet {
+public interface CallByGet {
     @GET("movie/now_playing")
     Call<NowPlayingItem> nowItem(@Query("api_key") String key);
 
