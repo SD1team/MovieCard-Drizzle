@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="thinkware">#EB2A31</color>
+    <color name="backgray">#EAEAEA</color>
+    <color name="ColorPrimary">@color/thinkware</color>
+    <color name="softBlack">#494949</color>
+</resources>
