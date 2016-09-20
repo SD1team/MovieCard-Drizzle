@@ -144,6 +144,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         getInfoBox(holder);
                     }
                 });
+            }else{
+                holder.infoTv.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_UP: {
+
+                                holder.infoTv.setVisibility(v.GONE);
+                                holder.scrollV.setVisibility(v.GONE);
+                                mResultSet.get(position).setClicked(false);
+
+                                break;
+                            }
+                            case MotionEvent.ACTION_MOVE: {
+                                if (holder.infoTv.getLineCount() > 24) {
+                                    holder.scrollV.getParent().requestDisallowInterceptTouchEvent(true);
+                                }
+
+                                break;
+                            }
+                        }
+                        return false;
+
+                    }
+                });
             }
 
         } else {
