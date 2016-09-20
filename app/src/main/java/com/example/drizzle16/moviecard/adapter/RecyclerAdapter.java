@@ -1,9 +1,10 @@
-package com.example.drizzle16.moviecard;
+package com.example.drizzle16.moviecard.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,25 +14,37 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.drizzle16.moviecard.R;
 import com.example.drizzle16.moviecard.dataSet.Results;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by drizzle16 on 2016-08-31.
  */
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private List<Results> mResultSet;
     private Context context;
-    private HashMap<Integer, String> mGenres;
+    private SparseArray mGenres;
+    private ArrayList<String> mPosterPathArray;
+    private ArrayList<String> mTitleArray;
+    private ArrayList<String> mGenreArray;
 
-    public MyAdapter(Context context, HashMap<Integer, String> genres, List<Results> resultsObj) {
+    private ArrayList<String> mTrashedArray;
+
+    public RecyclerAdapter(Context context, SparseArray genres, List<Results> resultsObj
+            , ArrayList<String> posterPathArray, ArrayList<String> titleArray, ArrayList<String> genreArray, ArrayList<String> trashedArray) {
         this.context = context;
         mGenres = genres;
         mResultSet = resultsObj;
+        mPosterPathArray = posterPathArray;
+        mTitleArray = titleArray;
+        mGenreArray = genreArray;
+        mTrashedArray = trashedArray;
+
     }
 
     @Override
@@ -48,28 +61,45 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         /*뷰 visibility 초기화*/
         holder.nullTv.setVisibility(View.GONE);
         holder.imgv.setVisibility(View.VISIBLE);
-
         holder.tv.setText(mResultSet.get(position).getTitle());
 
         /*하트 세팅*/
-        if(mResultSet.get(position).isLoved()){
+        if (mResultSet.get(position).isLoved()) {
             holder.loveV.setImageResource(R.drawable.like);
-        }else {
+        } else {
             holder.loveV.setImageResource(R.drawable.likegray);
+        }
+        /*휴지통에 버려진 적이 있나*/
+        for(int i=0; i<mTrashedArray.size(); ++i){
+            if(mResultSet.get(position).getTitle().equals(mTrashedArray.get(i))){
+                mResultSet.get(position).setLoved(false);
+                holder.loveV.setImageResource(R.drawable.likegray);
+                mPosterPathArray.remove(mResultSet.get(position).getPoster_path());
+                mTitleArray.remove(mResultSet.get(position).getTitle());
+                mGenreArray.remove(getFullGenre(position));
+            }
         }
         holder.loveV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mResultSet.get(position).isLoved() == false) {
+                if (mResultSet.get(position).isLoved()==false) {
                     mResultSet.get(position).setLoved(true);
                     holder.loveV.setImageResource(R.drawable.like);
+
+                    mPosterPathArray.add(mResultSet.get(position).getPoster_path());
+                    mTitleArray.add(mResultSet.get(position).getTitle());
+                    mGenreArray.add(getFullGenre(position));
 
                     Toast toast = Toast.makeText(context, "I LOVE IT!", Toast.LENGTH_SHORT);
                     toast.show();
 
-                } else if (mResultSet.get(position).isLoved() == true) {
+                } else if (mResultSet.get(position).isLoved()) {
                     mResultSet.get(position).setLoved(false);
                     holder.loveV.setImageResource(R.drawable.likegray);
+
+                    mPosterPathArray.remove(mResultSet.get(position).getPoster_path());
+                    mTitleArray.remove(mResultSet.get(position).getTitle());
+                    mGenreArray.remove(getFullGenre(position));
 
                     Toast toast = Toast.makeText(context, "LOVE CANCELED", Toast.LENGTH_SHORT);
                     toast.show();
@@ -94,9 +124,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         /*제공된 포스터가 있다면 이미지로드*/
-
         if (mResultSet.get(position).getPoster_path() != null) {
-            Log.i("lsb", "getPoster_path is not null in position : " + position);
+//            Log.i("lsb", "getPoster_path is not null in position : " + position);
 
             Picasso.with(context).setIndicatorsEnabled(true);
             Picasso.with(context)
@@ -139,7 +168,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public int getItemCount() {
 
         if (mResultSet != null) {
-            Log.i("lsb", "getItemCount : " + mResultSet.size());
             return mResultSet.size();
         } else {
             Log.i("lsb", "mItemSet.getResults is null");
@@ -168,6 +196,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     }
 
+    /*모든 장르id에 따른 value 찍기*/
+    public String getFullGenre(int position) {
+
+        String fullGenre = "";
+        String temp = "";
+
+        if (mResultSet.get(position).getGenre_ids().size() != 0) {
+            for (int i = 0; i < mResultSet.get(position).getGenre_ids().size(); ++i) {
+                int id = mResultSet.get(position).getGenre_ids().get(i);
+                temp = (String) mGenres.get(id);
+                fullGenre += temp + " | ";
+            }
+        } else {
+            fullGenre = "# NO GENRE DATA # |";
+        }
+
+        fullGenre = "| " + fullGenre;
+
+        return fullGenre;
+    }
+
     /*뷰에 띄울 info 정리*/
     public String OrganizedInfo(int position) {
 
@@ -184,23 +233,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             originalTitle = "# NO TITLE DATA #";
         }
 
-        /*모든 장르id에 따른 value 찍기*/
-        String fullGenres = "";
-        String temp = "";
-
-        if (mResultSet.get(position).getGenre_ids().size() != 0) {
-            for (int i = 0; i < mResultSet.get(position).getGenre_ids().size(); ++i) {
-                int id = mResultSet.get(position).getGenre_ids().get(i);
-                temp = mGenres.get(id);
-                fullGenres += temp + " | ";
-            }
-        } else {
-            fullGenres = "# NO GENRE DATA # |";
-        }
+        String fullGenre ="";
+        fullGenre = getFullGenre(position);
 
         String backInfo = mResultSet.get(position).toString();
 
-        String fullText = "<font color='#EB2A31'><b>" + originalTitle + "</b></font><br><br>" + "| " + fullGenres + "<br>" + backInfo;
+        String fullText = "<font color='#EB2A31'><b>" + originalTitle + "</b></font><br><br>" + fullGenre + "<br>" + backInfo;
 
         return fullText;
     }

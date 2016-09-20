@@ -6,4 +6,5 @@
     <color name="backgray">#EAEAEA</color>
     <color name="ColorPrimary">@color/thinkware</color>
     <color name="softBlack">#494949</color>
+    <color name="darkgray">#aaaaaa</color>
 </resources>

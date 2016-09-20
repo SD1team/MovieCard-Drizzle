@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgray"
-    android:orientation="vertical">
-
+    android:background="@color/backgray">
     <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -13,8 +10,6 @@
         android:background="@color/white"
         app:contentInsetStart="0dp"
         app:contentInsetEnd="0dp"
-        android:contentInsetStart="0dp"
-        android:contentInsetEnd="0dp"
         app:titleTextColor="#fff">
 
         <Button
@@ -24,16 +19,12 @@
             android:layout_height="@dimen/button_cube"
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:background="@drawable/mylovegray"/>
+            android:background="@drawable/mylove"/>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
-
-
-    </android.support.v7.widget.RecyclerView>
-
+<ListView
+    android:layout_marginTop="1dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/listview"></ListView>
 </LinearLayout>
